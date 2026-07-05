@@ -1,17 +1,24 @@
 const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize(
-  'minimarket',
-  '2n32FnfBzv4XyJi.root',
-  'RmncRgulo_08',
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
   {
-    host: 'gateway01.ap-southeast-1.prod.alicloud.tidbcloud.com',
+    host: process.env.DB_HOST,
     dialect: 'mysql',
-    logging: false
+    port: parseInt(process.env.DB_PORT),
+    logging: false,
+    dialectOptions: {
+      ssl: {
+        minVersion: 'TLSv1.2',
+        rejectUnauthorized: true
+      }
+    }
   }
 );
 
-// ✅ Test koneksi (jangan pakai top-level await)
+// ✅ Test koneksi
 sequelize.authenticate()
   .then(() => {
     console.log('✅ Database connected');
