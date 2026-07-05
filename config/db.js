@@ -2,10 +2,10 @@ const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize(
   'minimarket',
-  'root',
-  '',
+  '2n32FnfBzv4XyJi.root',
+  'RmncRgulo_08',
   {
-    host: 'localhost',
+    host: 'gateway01.ap-southeast-1.prod.alicloud.tidbcloud.com',
     dialect: 'mysql',
     logging: false
   }
