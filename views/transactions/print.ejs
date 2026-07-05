@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Struk Transaksi</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            width: 320px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px dashed #333;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        .header h3 {
+            margin: 0;
+            font-size: 20px;
+        }
+        .header .store-info {
+            font-size: 12px;
+            color: #555;
+            margin-top: 2px;
+        }
+        .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+        }
+        .row .label {
+            color: #555;
+        }
+        .row .value {
+            font-weight: bold;
+        }
+        .divider {
+            border-top: 1px dashed #333;
+            margin: 8px 0;
+        }
+        .divider-double {
+            border-top: 2px dashed #333;
+            margin: 8px 0;
+        }
+        .total {
+            border-top: 2px dashed #333;
+            padding-top: 10px;
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .total .row {
+            font-size: 16px;
+        }
+        .footer {
+            text-align: center;
+            border-top: 2px dashed #333;
+            padding-top: 10px;
+            margin-top: 10px;
+            color: #666;
+            font-size: 12px;
+        }
+        .footer .thanks {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+        .items {
+            margin: 10px 0;
+        }
+        .items .item {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 0;
+            font-size: 13px;
+        }
+        .items .item .name {
+            flex: 1;
+        }
+        .items .item .qty {
+            width: 40px;
+            text-align: center;
+        }
+        .items .item .price {
+            width: 80px;
+            text-align: right;
+        }
+        .items .item-header {
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+        .kasir-info {
+            background: #f5f5f5;
+            padding: 8px 10px;
+            border-radius: 4px;
+            margin: 8px 0;
+            font-size: 13px;
+        }
+        .kasir-info .row {
+            padding: 2px 0;
+        }
+        .btn-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .btn-group .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-group .btn-print {
+            background: #3498db;
+            color: white;
+        }
+        .btn-group .btn-print:hover {
+            background: #2980b9;
+        }
+        .btn-group .btn-back {
+            background: #7f8c8d;
+            color: white;
+        }
+        .btn-group .btn-back:hover {
+            background: #6c7a7d;
+        }
+        @media print {
+            .btn-group {
+                display: none !important;
+            }
+            body {
+                padding: 10px;
+                width: 100%;
+            }
+            .kasir-info {
+                background: none;
+                padding: 4px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h3>🏪 MINIMARKET</h3>
+        <div class="store-info">
+            Jl. Minimarket No. 123<br>
+            Telp: 0812-3456-7890
+        </div>
+    </div>
+
+    <div class="row">
+        <span class="label">No. Invoice</span>
+        <span class="value"><%= transaction ? transaction.invoice_number : '-' %></span>
+    </div>
+    <div class="row">
+        <span class="label">Tanggal</span>
+        <span class="value"><%= transaction ? new Date(transaction.created_at).toLocaleString('id-ID', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-' %></span>
+    </div>
+
+    <!-- ✅ KASIR INFO -->
+    <div class="kasir-info">
+        <div class="row">
+            <span class="label">Kasir</span>
+            <span class="value"><%= transaction && transaction.user ? transaction.user.name : '-' %></span>
+        </div>
+        <div class="row">
+            <span class="label">Metode Bayar</span>
+            <span class="value"><%= transaction ? (transaction.payment_method || 'Tunai') : '-' %></span>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ✅ ITEMS (BARANG YANG DIBELI) -->
+    <div class="items">
+        <div class="item item-header">
+            <span class="name">Item</span>
+            <span class="qty">Qty</span>
+            <span class="price">Harga</span>
+        </div>
+        
+        <% if (transaction && transaction.transactionItems && transaction.transactionItems.length > 0) { %>
+            <% transaction.transactionItems.forEach(item => { %>
+                <div class="item">
+                    <span class="name"><%= item.product ? item.product.name : 'Item' %></span>
+                    <span class="qty"><%= item.qty %></span>
+                    <span class="price">Rp <%= Number(item.price).toLocaleString() %></span>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <div class="item">
+                <span class="name" style="color:#999;">Tidak ada item</span>
+                <span class="qty">-</span>
+                <span class="price">-</span>
+            </div>
+        <% } %>
+    </div>
+
+    <div class="divider-double"></div>
+
+    <div class="total">
+        <div class="row">
+            <span>TOTAL</span>
+            <span>Rp <%= transaction ? Number(transaction.total_amount).toLocaleString() : '0' %></span>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="thanks">Terima kasih telah berbelanja!</div>
+        <small>*** Struk ini adalah bukti transaksi ***</small>
+    </div>
+
+    <!-- Buttons -->
+    <div class="btn-group">
+        <button class="btn btn-print" onclick="window.print()">🖨️ Cetak Struk</button>
+        <a href="/transactions" class="btn btn-back">← Kembali</a>
+    </div>
+
+    <script>
+        if (window.location.search.includes('print=true')) {
+            window.print();
+        }
+    </script>
+</body>
+</html>

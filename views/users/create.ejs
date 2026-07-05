@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah User - Minimarket</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .sidebar {
+            min-height: 100vh;
+            background: #2c3e50;
+            color: white;
+            padding: 0;
+        }
+        .sidebar .brand {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #34495e;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .sidebar .nav-link {
+            color: #bdc3c7;
+            padding: 12px 20px;
+            border-radius: 0;
+            transition: all 0.3s;
+        }
+        .sidebar .nav-link:hover {
+            background: #34495e;
+            color: white;
+        }
+        .sidebar .nav-link.active {
+            background: #3498db;
+            color: white;
+        }
+        .sidebar .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+        }
+        .main-content {
+            padding: 20px;
+        }
+        .top-bar {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .card-custom {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .card-custom .card-header {
+            background: none;
+            border-bottom: 2px solid #f0f2f5;
+            padding: 0 0 15px 0;
+            margin-bottom: 20px;
+        }
+        .card-custom .card-header h5 {
+            margin: 0;
+            color: #2c3e50;
+        }
+        .card-custom .form-label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+        .card-custom .form-control {
+            border-radius: 8px;
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s;
+        }
+        .card-custom .form-control:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        .card-custom .input-group-text {
+            border: 2px solid #e9ecef;
+            border-right: none;
+            background: white;
+        }
+        .card-custom .btn-simpan {
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .card-custom .btn-simpan:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        .card-custom .btn-batal {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .card-custom .btn-batal:hover {
+            background: #c0392b;
+        }
+        .badge-role {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-role.admin { background: #e74c3c; color: white; }
+        .badge-role.manager { background: #f39c12; color: white; }
+        .badge-role.cashier { background: #2ecc71; color: white; }
+        .btn-back {
+            color: #7f8c8d;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-back:hover {
+            color: #2c3e50;
+        }
+        .alert-custom {
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar d-none d-md-block">
+                <div class="brand">
+                    <i class="bi bi-shop"></i> Minimarket
+                </div>
+                <div class="nav flex-column">
+                    <a href="/dashboard" class="nav-link">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                    <a href="/users" class="nav-link active">
+                        <i class="bi bi-people"></i> Users
+                    </a>
+                    <hr style="border-color: #34495e;">
+                    <a href="/logout" class="nav-link text-danger">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 main-content">
+                <!-- Top Bar -->
+                <div class="top-bar d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="/users" class="btn-back">
+                            <i class="bi bi-arrow-left"></i> Kembali
+                        </a>
+                        <h4 class="mb-0 mt-2">
+                            <i class="bi bi-person-plus"></i> Tambah User
+                        </h4>
+                    </div>
+                    <div>
+                        <span class="me-3">
+                            <i class="bi bi-person-circle"></i> 
+                            <%= user ? user.name : 'Guest' %>
+                            <span class="badge-role <%= user ? user.role : '' %>">
+                                <%= user ? user.role : '' %>
+                            </span>
+                        </span>
+                        <a href="/logout" class="btn btn-danger btn-sm">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Form Card -->
+                <div class="card-custom">
+                    <div class="card-header">
+                        <h5><i class="bi bi-person-plus"></i> Tambah User Baru</h5>
+                    </div>
+
+                    <!-- Error Message -->
+                    <% if (error) { %>
+                        <div class="alert alert-danger alert-custom d-flex align-items-center" role="alert">
+                            <i class="bi bi-exclamation-circle me-2"></i>
+                            <%= error %>
+                        </div>
+                    <% } %>
+
+                    <!-- Form -->
+                    <form action="/users/create" method="POST">
+                        <!-- Nama -->
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nama</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-person text-muted"></i>
+                                </span>
+                                <input type="text" class="form-control" 
+                                       id="name" name="name" 
+                                       placeholder="Masukkan nama lengkap" 
+                                       value="<%= name || '' %>" required>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-envelope text-muted"></i>
+                                </span>
+                                <input type="email" class="form-control" 
+                                       id="email" name="email" 
+                                       placeholder="Masukkan email" 
+                                       value="<%= email || '' %>" required>
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-lock text-muted"></i>
+                                </span>
+                                <input type="password" class="form-control" 
+                                       id="password" name="password" 
+                                       placeholder="Masukkan password (min 6 karakter)" 
+                                       required minlength="6">
+                            </div>
+                        </div>
+
+                        <!-- Role -->
+                        <div class="mb-4">
+                            <label for="role" class="form-label">Role</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-shield text-muted"></i>
+                                </span>
+                                <select class="form-control" id="role" name="role">
+                                    <option value="cashier" <%= role === 'cashier' ? 'selected' : '' %>>Kasir</option>
+                                    <option value="manager" <%= role === 'manager' ? 'selected' : '' %>>Manager</option>
+                                    <option value="admin" <%= role === 'admin' ? 'selected' : '' %>>Admin</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn-simpan">
+                                <i class="bi bi-check-circle me-1"></i> Simpan
+                            </button>
+                            <a href="/users" class="btn-batal">
+                                <i class="bi bi-x-circle me-1"></i> Batal
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
